@@ -45,7 +45,9 @@ SRC		=	ft_atoi.c\
 			ft_striteri.c\
 			ft_substr.c\
 			ft_tolower.c\
-			ft_toupper.c
+			ft_toupper.c\
+			ft_strcmp.c\
+			ft_memdel.c
 
 SRB		=	ft_lstadd_back.c\
 			ft_lstadd_front.c\
