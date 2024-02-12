@@ -6,7 +6,7 @@
 /*   By: joseph <joseph@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 11:59:12 by joseph            #+#    #+#             */
-/*   Updated: 2024/02/06 17:01:55 by joseph           ###   ########.fr       */
+/*   Updated: 2024/02/12 11:18:56 by joseph           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ static char *reference_value(char *value)
         env_value[j++] = value[i++];
     }
     env_value[j] = '\0';
-    returnn (env_value);
+    return (env_value);
 }
 
 static char    *get_env_lv(char *reference, t_env *env)

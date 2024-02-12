@@ -6,11 +6,38 @@
 /*   By: joseph <joseph@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 17:21:04 by joseph            #+#    #+#             */
-/*   Updated: 2024/02/06 18:29:36 by joseph           ###   ########.fr       */
+/*   Updated: 2024/02/12 11:15:57 by joseph           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Minishell.h"
+
+int next_alloc(char *line, int *i)
+{
+    int count;
+    int j;
+    char c;
+    
+    count = 0;
+    j = 0;
+    c = ' ';
+    while (line[*i + j] && (line[*i + j] != ' ' || c != ' '))
+    {
+        if (c == ' ' && (line[*i + j] == '\'' || line[*i + j] == '\"'))
+            c = line[*i + j++];
+        else if (c != ' ' && line[*i + j] == c)
+        {
+            count += 2;
+            c = ' ';
+            j++;
+        }
+        else
+            j++;
+        if (line[*i +j - 1] == '\\')
+            count--;
+    }
+    return (j - count + 1);
+}
 
 void type_token(t_token *token, int separator)
 {
@@ -32,7 +59,7 @@ void type_token(t_token *token, int separator)
         token->type = 8;
 }
 
-static t_token *next_token(char *line, int *i)
+t_token *next_token(char *line, int *i)
 {
     t_token *token;
     int j;
