@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseph <joseph@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 13:20:41 by joseph            #+#    #+#             */
-/*   Updated: 2024/02/12 13:29:37 by joseph           ###   ########.fr       */
+/*   Updated: 2024/02/13 12:31:59 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Minishell.h"
+
+//ver si el token en cuestion es de tipo ejecutable de lo contrario avanzar al siguiente token
 
 t_token *next_exe(t_token *token, int skip)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shlv.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseph <joseph@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 11:59:12 by joseph            #+#    #+#             */
-/*   Updated: 2024/02/12 11:18:56 by joseph           ###   ########.fr       */
+/*   Updated: 2024/02/13 12:44:52 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,15 @@ static char *get_env_name(char *dest, const char *src)
     return (dest);
 }
 
+//Se salta caracteres especiales
+
 void    ft_jump_space(const char *str, int *i)
 {
     while ((str[*i] == ' ' || str[*i] == '\t' || str[*i] == '\n') || (str[*i] == '\r' || str[*i] == '\v' || str[*i] == '\f'))
         (*i)++;
 }
+
+//Segun la consola el numero de procesos contados va de 0 a 9
 
 static int invalid_lv(const char *str)
 {
@@ -45,6 +49,8 @@ static int invalid_lv(const char *str)
     }
     return (0);
 }
+
+//obtener la longitud de las variables de entorno
 
 static int get_env_len(char *value)
 {
@@ -66,6 +72,8 @@ static int get_env_len(char *value)
     return (j);
 }
 
+//Obtiene solo la parte del lv =
+
 static int get_lv(const char *str)
 {
     int i;
@@ -86,6 +94,8 @@ static int get_lv(const char *str)
         num = num * 10 + (str[i++] - '0');
     return (num * sign);
 }
+
+//La obtencion del parametro
 
 static char *reference_value(char *value)
 {
@@ -134,6 +144,8 @@ static char    *get_env_lv(char *reference, t_env *env)
     return (env_value);
 }
 
+//Pues la comprobacion y aumento del shlvl
+
 void    increment_shlv(t_env *env)
 {
     int shell_lv;
@@ -142,7 +154,7 @@ void    increment_shlv(t_env *env)
     char *value_shell;
 
     value_shell = get_env_lv("SHLVL", env);
-    if (strcmp(value_shell, "") == 0)
+    if (ft_strcmp(value_shell, "") == 0)
         return ;
     shell_lv = get_lv(value_shell) + 1;
     ft_memdel(value_shell);

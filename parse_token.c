@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_token.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseph <joseph@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 11:54:07 by joseph            #+#    #+#             */
-/*   Updated: 2024/02/12 14:03:30 by joseph           ###   ########.fr       */
+/*   Updated: 2024/02/13 12:10:09 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,6 @@ void parse_token(t_mini *mini)
             if (prev)
             {
                 token->next = prev->next;
-                prev = prev;
             }
             else
             {
@@ -124,13 +123,11 @@ void parse_token(t_mini *mini)
             prev->next->prev = token;
             if (mini->token->prev)
             {
-                prev->next = prev->next;
                 mini->token = mini->token->prev;
             }
             else
             {
                 prev->next = token;
-                mini->token = mini->token;
             }
         }
         token = token->next;

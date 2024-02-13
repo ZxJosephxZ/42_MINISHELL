@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseph <joseph@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 17:21:04 by joseph            #+#    #+#             */
-/*   Updated: 2024/02/12 11:15:57 by joseph           ###   ########.fr       */
+/*   Updated: 2024/02/13 12:41:52 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ int next_alloc(char *line, int *i)
     return (j - count + 1);
 }
 
+//Aginacion del tipo del token
+
 void type_token(t_token *token, int separator)
 {
     if (ft_strcmp(token->str, "") == 0)
@@ -58,6 +60,8 @@ void type_token(t_token *token, int separator)
     else
         token->type = 8;
 }
+
+//Tomar los argumentos correctamente token por token
 
 t_token *next_token(char *line, int *i)
 {
@@ -91,6 +95,7 @@ t_token *next_token(char *line, int *i)
     return (token);
 }
 
+//Se salta lo inesesario
 static int ignore_sep(char *line, int i)
 {
     if (line[i] && line[i] == '\\' && line[i + 1] && line[i + 1] == ';')
@@ -104,6 +109,8 @@ static int ignore_sep(char *line, int i)
         return (1);
     return (0);
 }
+
+//Vamos recorre los tokens y los va añadiendo a la estructura
 
 t_token *get_tokens(char *line)
 {
