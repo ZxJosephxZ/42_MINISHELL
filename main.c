@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joseph <joseph@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 10:51:19 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/02/13 12:40:39 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/02/19 19:56:28 by joseph           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ int check_struct(t_mini *mini, t_token *token)
 	{
 		if (is_types(token, "TAI") && (!token->next || is_types(token->next, "TAIPE")))
 		{
-			ft_putstr_fd("BRO ESCRIBE BIEN1\n",2);
+			ft_putstr_fd("BRO ESCRIBE BIEN1\n",STDERR);
 			mini->error = 2;
 			return (0);
 		}
 		if (is_types(token, "PE") && (!token->prev || !token->next || is_types(token->prev, "TAIPE")))
 		{
-			ft_putstr_fd("BRO ESCRIBE BIEN2\n",2);
+			ft_putstr_fd("BRO ESCRIBE BIEN2\n",STDERR);
 			mini->error = 2;
 			return (0);
 		}
@@ -40,14 +40,19 @@ int check_struct(t_mini *mini, t_token *token)
 void execution(t_mini *mini)
 {
 	t_token *token;
-	//int status;
+	int status;
 	
-	token = next_exe(mini->token, 0);
+	token = next_exe(mini->token, NOSKIP);
 	if (is_types(mini->token, "TAI"))
 	{
 		token = mini->token->next;
 	}
-
+	while (token)
+	{
+		//ojo pruebas, claro que debemos resetear los fd
+		type_exe(mini,token);
+		waitpid(-1,&status,0);
+	}
 	//Procesos
 }
 
@@ -64,7 +69,7 @@ int	main(int arc, char **argc, char **envp)
 	(void)arc;
 	// reserva de una linea pero aqui usaremos el readline
 	line = malloc(sizeof(char) * 22);
-	line = "$ARG=Makefile | cat $ARG | wc -l";
+	line = "45cho Makefile | wc -l";
 	mini.env = malloc(sizeof(t_env));
 	//Obtencion de la variables de entorno
 	get_env(&mini, envp);
@@ -77,14 +82,14 @@ int	main(int arc, char **argc, char **envp)
 	//Variable auxiliar que servira como nodo para la estructura de cola de los tokens
 	token = mini.token;
 
-	/**while (token)
+	while (token)
 	{
-		if (is_type(token, 8))
+		if (is_type(token, ARG))
 		{
-			type_token(token, 0);
+			type_token(token, NOSKIP);
 		}
 		token = token->next;
-	}**/
+	}
 	//Para comprobar los tokens bien divididos con sus respectivos tipos
 	while (mini.token)
 	{

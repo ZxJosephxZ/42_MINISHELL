@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joseph <joseph@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 17:21:04 by joseph            #+#    #+#             */
-/*   Updated: 2024/02/13 12:41:52 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/02/19 19:58:09 by joseph           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,21 +44,21 @@ int next_alloc(char *line, int *i)
 void type_token(t_token *token, int separator)
 {
     if (ft_strcmp(token->str, "") == 0)
-        token->type = 1;
+        token->type = EMPTY;
     else if (ft_strcmp(token->str, ">") == 0 && separator == 0)
-        token->type = 2;
+        token->type = TRUNC;
     else if (ft_strcmp(token->str, ">>") == 0 && separator == 0)
-        token->type = 3;
+        token->type = APPEND;
     else if (ft_strcmp(token->str, "<") == 0 && separator == 0)
-        token->type = 4;
+        token->type = INPUT;
     else if (ft_strcmp(token->str, "|") == 0 && separator == 0)
-        token->type = 5;
+        token->type = PIPE;
     else if (ft_strcmp(token->str, ";") == 0 && separator == 0)
-        token->type = 6;
-    else if(token->prev == NULL || token->prev->type >= 2)
-        token->type = 7;
+        token->type = END;
+    else if(token->prev == NULL || token->prev->type >= TRUNC)
+        token->type = CMD;
     else
-        token->type = 8;
+        token->type = ARG;
 }
 
 //Tomar los argumentos correctamente token por token
