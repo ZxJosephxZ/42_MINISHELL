@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseph <joseph@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 12:41:21 by joseph            #+#    #+#             */
-/*   Updated: 2024/02/19 19:17:03 by joseph           ###   ########.fr       */
+/*   Updated: 2024/02/20 14:42:34 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>
+# include <limits.h>
 
 # define EMPTY 0
 # define CMD 1
@@ -36,6 +37,10 @@
 
 # define SKIP 1
 # define NOSKIP 0
+# define EXPANSION 36
+# define UNKNOWN_COMMAND 127
+# define ERROR 1
+# define SUCCESS 0
 
 
 typedef struct s_env
@@ -68,9 +73,18 @@ typedef struct s_mini
     int ret;
     int not_exec;
     int error;
+    int exit;
+    int charge;
     struct s_env *env;
     struct s_token *token;
 } t_mini;
+
+typedef struct	s_expansions
+{
+	char			*new_arg;
+	int				i;
+	int				j;
+}	t_expansions;
 
 int     main(int arc, char **argc, char **envp);
 t_token *prev_token(t_token *token, int skip);
@@ -90,5 +104,24 @@ void type_exe(t_mini *mini,t_token *token);
 int    get_env(t_mini *minishell, char **envp);
 void    increment_shlv(t_env *env);
 t_token *next_token(char *line, int *i);
+char	**cmd_tab(t_token *start);
 int next_alloc(char *line, int *i);
+char			*expansions(char *arg, t_env *env, int ret);
+int		has_pipe(t_token *token);
+void	mini_exit(t_mini *mini, char **cmd);
+int		is_builtin(char *command);
+int		exec_builtin(char **args);
+char	**cmd_tab(t_token *start);
+void	free_tab(char **tab);
+
+int		get_var_len(const char *arg, int pos, t_env *env, int ret);
+int		arg_alloc_len(const char *arg, t_env *env, int ret);
+void		insert_var(t_expansions *ex, char *arg, t_env *env, int ret);
+char	*get_var_value(const char *arg, int pos, t_env *env, int ret);
+int		is_env_char(int c);
+char	*get_env_value(char *arg, t_env *env);
+
+int				ft_echo(char **args);
+int		ft_pwd(void);
+
 #endif

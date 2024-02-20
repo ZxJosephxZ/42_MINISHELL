@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joseph <joseph@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 13:20:41 by joseph            #+#    #+#             */
-/*   Updated: 2024/02/19 19:21:46 by joseph           ###   ########.fr       */
+/*   Updated: 2024/02/20 14:35:47 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,14 @@ t_token *next_exe(t_token *token, int skip)
     {
         token = token->next;
     }
-    while (token && token->type != 7)
+    while (token && token->type != CMD)
     {
         token = token->next;
-        if ( token && token->type == 7 && token->prev == NULL)
+        if ( token && token->type == CMD && token->prev == NULL)
         {
             ;
         }
-        else if (token && token->type == 7 && token->type < 6)
+        else if (token && token->type == CMD && token->type < END)
         {
             token = token->next;
         }
@@ -48,11 +48,11 @@ void    redirection(t_mini *mini, t_token *token, int type)
     ft_close(mini->fdout);
     if (type == TRUNC)
     {
-        mini->fdout = open(token->str, O_CREAT | O_WRONLY | O_TRUNC);
+        mini->fdout = open(token->str, O_CREAT | O_WRONLY | O_TRUNC, 0777);
     }
     else
     {
-        mini->fdout = open(token->str, O_CREAT | O_WRONLY | O_APPEND);
+        mini->fdout = open(token->str, O_CREAT | O_WRONLY | O_APPEND, 0777);
     }
     if (mini->fdout == -1)
     {
@@ -69,7 +69,7 @@ void    redirection(t_mini *mini, t_token *token, int type)
 void    input(t_mini *mini, t_token *token)
 {
     ft_close(mini->fdin);
-    mini->fdin = open(token->str, O_RDONLY);
+    mini->fdin = open(token->str, O_RDONLY,0777);
     if (mini->fdin == -1)
     {
         ft_putstr_fd("MINISHELL:", STDERR);
@@ -110,6 +110,32 @@ int minpipe(t_mini *mini)
     }
 }
 
+void    ejecucion(t_mini *mini, t_token *token)
+{
+    char	**cmd;
+	int		i;
+
+	if (mini->charge == 0)
+		return ;
+	cmd = cmd_tab(token);
+	i = 0;
+	while (cmd && cmd[i])
+	{
+		cmd[i] = expansions(cmd[i], mini->env, mini->ret);
+		i++;
+	}
+	if (cmd && ft_strcmp(cmd[0], "exit") == 0 && has_pipe(token) == 0)
+		mini_exit(mini, cmd);
+	else if (cmd && is_builtin(cmd[0]))
+		mini->ret = exec_builtin(cmd);
+	free_tab(cmd);
+	ft_close(mini->pipein);
+	ft_close(mini->pipeout);
+	mini->pipein = -1;
+	mini->pipeout = -1;
+	mini->charge = 0;
+}
+
 void type_exe(t_mini *mini,t_token *token)
 {
     //Nodos para poder mover
@@ -117,8 +143,8 @@ void type_exe(t_mini *mini,t_token *token)
     t_token *next;
     int pipe;
     
-    prev = prev_token(token, 0);
-    next = next_node_token(token, 0);
+    prev = prev_token(token, NOSKIP);
+    next = next_node_token(token, NOSKIP);
     pipe = 0;
     if (is_type(prev, TRUNC))
     {
@@ -140,8 +166,9 @@ void type_exe(t_mini *mini,t_token *token)
     {
         type_exe(mini, next->next);
     }
-    if ((is_type(prev,END) || is_type(prev, PIPE) || !prev) && pipe != 1 )
+    if ((is_type(prev,END) || is_type(prev, PIPE) || !prev) && pipe != 1 && mini->not_exec == 0)
     {
         //Tratar de ejcutar todos los cmd posibles;
+        ejecucion(mini,token);
     }
 }
