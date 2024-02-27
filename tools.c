@@ -6,11 +6,13 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 11:47:50 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/02/20 12:12:02 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/02/27 13:24:37 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Minishell.h"
+
+//Comprobacion y retorno de el valor de la variable.
 
 char	*get_var_value(const char *arg, int pos, t_env *env, int ret)
 {
@@ -37,6 +39,8 @@ char	*get_var_value(const char *arg, int pos, t_env *env, int ret)
 	return (var_value);
 }
 
+//Si es un caso de variable de entorno
+
 int		is_env_char(int c)
 {
 	if (ft_isalnum(c) == 1 || c == '_')
@@ -44,6 +48,7 @@ int		is_env_char(int c)
 	return (0);
 }
 
+//En el caso $? imprimir 0 o 1
 
 int		ret_size(int ret)
 {
@@ -55,6 +60,8 @@ int		ret_size(int ret)
 	ft_memdel(tmp);
 	return (ret_len);
 }
+
+//obtencion de la longitud real de la variable
 
 int		get_var_len(const char *arg, int pos, t_env *env, int ret)
 {
@@ -80,6 +87,8 @@ int		get_var_len(const char *arg, int pos, t_env *env, int ret)
 	return (i);
 }
 
+//Contabilizar la longitud del argumento
+
 int		arg_alloc_len(const char *arg, t_env *env, int ret)
 {
 	int		i;
@@ -89,6 +98,7 @@ int		arg_alloc_len(const char *arg, t_env *env, int ret)
 	size = 0;
 	while (arg[++i])
 	{
+		//36 == $
 		if (arg[i] == EXPANSION)
 		{
 			i++;
@@ -108,6 +118,8 @@ int		arg_alloc_len(const char *arg, t_env *env, int ret)
 	}
 	return (size);
 }
+
+//Copia la variable y devuelve el numero de iteraciones
 
 static int		varlcpy(char *new_arg, const char *env_value, int pos)
 {
@@ -129,7 +141,10 @@ void		insert_var(t_expansions *ex, char *arg, t_env *env, int ret)
         ex->i += varlcpy(ex->new_arg, env_value, ex->i);
     }
 	ft_memdel(env_value);
-	arg[ex->j] == '?' ? ex->j++ : 0;
+	if (arg[ex->j] == '?')
+	{
+		ex->j++;
+	}
 	if (ft_isdigit(arg[ex->j]) == 0 && arg[ex->j - 1] != '?')
 	{
 		while (is_env_char(arg[ex->j]) == 1)

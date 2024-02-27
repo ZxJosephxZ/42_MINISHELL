@@ -6,11 +6,13 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 11:54:07 by joseph            #+#    #+#             */
-/*   Updated: 2024/02/20 10:56:42 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/02/27 13:03:35 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Minishell.h"
+
+//Buscar los comandos o argumentos ejecutables anteriores
 
 t_token *prev_token(t_token *token, int skip)
 {
@@ -25,6 +27,8 @@ t_token *prev_token(t_token *token, int skip)
     return token;
 }
 
+//Buscar los comandos o argumentos ejecutables posteriores
+
 t_token *next_node_token(t_token *token, int skip)
 {
     if (token && skip)
@@ -38,6 +42,8 @@ t_token *next_node_token(t_token *token, int skip)
     return token;
 }
 
+//Mostrar si es el tipo indicado
+
 int is_type(t_token *token, int arguments)
 {
     if (token && token->type == arguments)
@@ -46,6 +52,8 @@ int is_type(t_token *token, int arguments)
     }
     return (0);
 }
+
+//Identificar el tipo de ejecucion del comando
 
 int is_types(t_token *token, char *types)
 {
@@ -84,6 +92,8 @@ int is_types(t_token *token, char *types)
     return (0);
 }
 
+//Verfica si el comando esta dentro de los tipos designados
+
 int valid_argument(t_token *token)
 {
     t_token *prev;
@@ -102,6 +112,8 @@ int valid_argument(t_token *token)
         return (0);
     }
 }
+
+//Comprobar que cumplen un correcto ordenamiento de ejecucion 
 
 void parse_token(t_mini *mini)
 {

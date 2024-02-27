@@ -6,11 +6,13 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 11:33:44 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/02/20 12:04:37 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/02/27 13:20:24 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Minishell.h"
+
+//Numero de argumentos 
 
 static	int		nb_args(char **args)
 {
@@ -21,6 +23,8 @@ static	int		nb_args(char **args)
 		size++;
 	return (size);
 }
+
+//Establece el echo con flags
 
 int				ft_echo(char **args)
 {
@@ -48,6 +52,8 @@ int				ft_echo(char **args)
 		write(1, "\n", 1);
 	return (SUCCESS);
 }
+
+//Obtener el path actual getcwd(current working directory)
 
 int		ft_pwd(void)
 {

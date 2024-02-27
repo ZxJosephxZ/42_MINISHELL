@@ -6,11 +6,13 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 11:05:43 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/02/20 14:45:39 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/02/27 13:08:16 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Minishell.h"
+
+//si es un numero en string
 
 int	ft_strisnum(const char *str)
 {
@@ -29,6 +31,8 @@ int	ft_strisnum(const char *str)
 	}
 	return (1);
 }
+
+//En caso de tener una variable que guarde datos o tener un valor especial como ? o $, se abre y guarda elll valor real.
 
 char			*expansions(char *arg, t_env *env, int ret)
 {
@@ -57,6 +61,8 @@ char			*expansions(char *arg, t_env *env, int ret)
 	return (ex.new_arg);
 }
 
+//Comprobar que el prompt no tenga pipes
+
 int		has_pipe(t_token *token)
 {
 	while (token && is_type(token, END) == 0)
@@ -67,6 +73,9 @@ int		has_pipe(t_token *token)
 	}
 	return (0);
 }
+
+//salida del programar por exit
+
 void	mini_exit(t_mini *mini, char **cmd)
 {
 	mini->exit = 1;
@@ -88,6 +97,9 @@ void	mini_exit(t_mini *mini, char **cmd)
 	else
 		mini->ret = 0;
 }
+
+//comprueba si es algun ejecutable 
+
 int		is_builtin(char *command)
 {
 	if (ft_strcmp(command, "echo") == 0)
@@ -105,6 +117,8 @@ int		is_builtin(char *command)
 	return (0);
 }
 
+//Ejecuta el comando
+
 int		exec_builtin(char **args)
 {
 	int		result;
@@ -116,6 +130,8 @@ int		exec_builtin(char **args)
 		result = ft_pwd();
 	return (result);
 }
+
+//Libera el espacio reservado para el argumento en cuestion
 
 void	free_tab(char **tab)
 {
@@ -131,6 +147,8 @@ void	free_tab(char **tab)
 	if (tab)
 		ft_memdel(tab);
 }
+
+//Descompone y guarda los cmd por posicion
 
 char	**cmd_tab(t_token *start)
 {

@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 13:20:41 by joseph            #+#    #+#             */
-/*   Updated: 2024/02/20 14:35:47 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/02/27 13:14:03 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,8 @@ int minpipe(t_mini *mini)
     }
 }
 
+//Comprobacion de los casos con respecto a los argumentos y comandos
+
 void    ejecucion(t_mini *mini, t_token *token)
 {
     char	**cmd;
@@ -135,6 +137,8 @@ void    ejecucion(t_mini *mini, t_token *token)
 	mini->pipeout = -1;
 	mini->charge = 0;
 }
+
+//Tipo de ejecucion sea redireccion, input , pipe, cmd, args
 
 void type_exe(t_mini *mini,t_token *token)
 {

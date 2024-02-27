@@ -6,11 +6,27 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 10:51:19 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/02/20 13:31:46 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/02/27 12:38:23 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Minishell.h"
+
+void	handle_signal(int sign)
+{
+	if(sign == SIGINT)
+	{
+		printf("\nMinishell->");
+	}
+}
+
+void    signal_detecter(void)
+{
+	//SIGINT es la señal cntrl + c
+    signal(SIGINT, handle_signal);
+	//SIG_ING ignora la señal en este caso cntrl + "\"
+    signal(SIGQUIT, SIG_IGN);
+}
 
 
 //Comprueba el correcto ordenamiento de los tokens para su posterior ejecucion
@@ -72,6 +88,10 @@ int	main(int arc, char **argc, char **envp)
 	mini.ret = 0;
 	mini.not_exec = 0;
 	mini.exit = 0;
+	
+	if(arc > 2 && argc == 0 && envp == 0)
+		return(0);
+	signal_detecter();
 	//Obtencion de la variables de entorno
 	get_env(&mini, envp);
 	//La incrementacion de la env shlvl para cada proceso en ejecucion

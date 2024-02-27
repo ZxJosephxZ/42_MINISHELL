@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 12:41:21 by joseph            #+#    #+#             */
-/*   Updated: 2024/02/20 14:42:34 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/02/27 12:34:13 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,12 @@
 # include "libft/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/stat.h>
 # include <sys/wait.h>
+# include <sys/types.h>
+# include <signal.h>
 # include <limits.h>
+# include <dirent.h>
 
 # define EMPTY 0
 # define CMD 1
