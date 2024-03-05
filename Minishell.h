@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 12:41:21 by joseph            #+#    #+#             */
-/*   Updated: 2024/02/27 12:34:13 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/03/05 15:58:32 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ typedef struct s_mini
     int fdin;
     int pipein;
     int parent;
+    int in;
+    int out;
     int pid;
     int last;
     int pipeout;
@@ -109,12 +111,13 @@ int    get_env(t_mini *minishell, char **envp);
 void    increment_shlv(t_env *env);
 t_token *next_token(char *line, int *i);
 char	**cmd_tab(t_token *start);
+char		*get_env_name(char *dest, const char *src);
 int next_alloc(char *line, int *i);
 char			*expansions(char *arg, t_env *env, int ret);
 int		has_pipe(t_token *token);
 void	mini_exit(t_mini *mini, char **cmd);
 int		is_builtin(char *command);
-int		exec_builtin(char **args);
+int		exec_builtin(char **args, t_mini *mini);
 char	**cmd_tab(t_token *start);
 void	free_tab(char **tab);
 
@@ -127,5 +130,8 @@ char	*get_env_value(char *arg, t_env *env);
 
 int				ft_echo(char **args);
 int		ft_pwd(void);
+int		ft_env(t_env *env);
+int		ft_export(char **args, t_env *env);
+int	ft_unset(char **args, t_mini *mini);
 
 #endif

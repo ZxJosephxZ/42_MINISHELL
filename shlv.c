@@ -6,25 +6,13 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 11:59:12 by joseph            #+#    #+#             */
-/*   Updated: 2024/02/13 12:44:52 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/03/05 15:06:13 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Minishell.h"
 
-static char *get_env_name(char *dest, const char *src)
-{
-    int i;
 
-    i = 0;
-    while (src[i] && src[i] != '=' && ft_strlen(src) < 4096)
-    {
-        dest[i] = src[i];
-        i++;
-    }
-    dest[i] = '\0';
-    return (dest);
-}
 
 //Se salta caracteres especiales
 
@@ -165,7 +153,7 @@ void    increment_shlv(t_env *env)
         {
             ft_memdel(env->value);
             lv = ft_itoa(shell_lv);
-            env->value = ft_strjoin("SHLVL", lv);
+            env->value = ft_strjoin("SHLVL=", lv);
             ft_memdel(lv);
             return ;
         }

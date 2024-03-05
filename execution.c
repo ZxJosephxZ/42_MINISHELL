@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 13:20:41 by joseph            #+#    #+#             */
-/*   Updated: 2024/02/27 13:14:03 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/03/05 12:23:42 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void    redirection(t_mini *mini, t_token *token, int type)
     {
         ft_putstr_fd("MINISHELL:", STDERR);
         ft_putstr_fd(token->str, STDERR);
-        ft_putstr_fd("No esta pipi pi", STDERR);
+        ft_putstr_fd("Archivo no encontrado\n", STDERR);
         mini->ret = 1;
         mini->not_exec = 1;
         return ;
@@ -74,7 +74,7 @@ void    input(t_mini *mini, t_token *token)
     {
         ft_putstr_fd("MINISHELL:", STDERR);
         ft_putstr_fd(token->str, STDERR);
-        ft_putstr_fd("No esta pipi pi", STDERR);
+        ft_putstr_fd("Archivo no encontrado", STDERR);
         mini->ret = 1;
         mini->not_exec = 1;
         return ;
@@ -129,7 +129,7 @@ void    ejecucion(t_mini *mini, t_token *token)
 	if (cmd && ft_strcmp(cmd[0], "exit") == 0 && has_pipe(token) == 0)
 		mini_exit(mini, cmd);
 	else if (cmd && is_builtin(cmd[0]))
-		mini->ret = exec_builtin(cmd);
+		mini->ret = exec_builtin(cmd, mini);
 	free_tab(cmd);
 	ft_close(mini->pipein);
 	ft_close(mini->pipeout);

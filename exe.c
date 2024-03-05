@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 11:05:43 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/02/27 13:08:16 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/03/05 15:49:12 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void	mini_exit(t_mini *mini, char **cmd)
 	{
 		mini->ret = 1;
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR);
+		mini->exit = 0;
 	}
 	else if (cmd[1] && ft_strisnum(cmd[1]) == 0)
 	{
@@ -119,7 +120,7 @@ int		is_builtin(char *command)
 
 //Ejecuta el comando
 
-int		exec_builtin(char **args)
+int		exec_builtin(char **args, t_mini *mini)
 {
 	int		result;
 
@@ -128,6 +129,12 @@ int		exec_builtin(char **args)
 		result = ft_echo(args);
 	if (ft_strcmp(args[0], "pwd") == 0)
 		result = ft_pwd();
+	if (ft_strcmp(args[0], "env") == 0)
+		result = ft_env(mini->env);
+	if (ft_strcmp(args[0], "export") == 0)
+		result = ft_export(args, mini->env);
+	if (ft_strcmp(args[0], "unset") == 0)
+		result = ft_unset(args, mini);
 	return (result);
 }
 

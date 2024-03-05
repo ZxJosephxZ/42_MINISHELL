@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 10:51:19 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/02/27 12:38:23 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/03/05 12:11:31 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,17 @@ void execution(t_mini *mini)
 		mini->parent = 1;
 		type_exe(mini,token);
 		waitpid(-1,&status,0);
-		exit(mini->ret);
+		status = WEXITSTATUS(status);
+		if (mini->last == 0)
+		{
+			mini->ret = status;
+		}
+		if (mini->parent == 0)
+		{
+			exit(mini->ret);
+		}
+		mini->not_exec = 0;
+		token = next_exe(token, SKIP);
 	}
 	//Procesos
 }
@@ -84,6 +94,8 @@ int	main(int arc, char **argc, char **envp)
 
 	(void)argc;
 	(void)arc;
+	mini.in = dup(STDIN);
+	mini.out = dup(STDOUT);
 	mini.env = malloc(sizeof(t_env));
 	mini.ret = 0;
 	mini.not_exec = 0;
@@ -100,7 +112,7 @@ int	main(int arc, char **argc, char **envp)
 	
 	//Comprobacion de un correcto asignado de tipos o secuencia
 	parse_token(&mini);
-	while(1)
+	while(mini.exit == 0)
 	{
 		line = readline("Minishell:");
 		mini.token = get_tokens(line);
