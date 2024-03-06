@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 11:05:43 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/03/06 21:45:41 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/03/06 23:33:00 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,12 @@ void	mini_exit(t_mini *mini, char **cmd)
 {
 	mini->exit = 1;
 	ft_putstr_fd("exit ", STDERR);
-	if (cmd[2] && (ft_strisnum(cmd[1]) || ft_strisnum(cmd[2])))
+
+	if ((cmd[1] && cmd[2]) && (ft_strisnum(cmd[1]) || ft_strisnum(cmd[2])))
 	{
 		mini->ret = 1;
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR);
-		mini->exit = 2;
+		mini->exit = 0;
 	}
 	else if (cmd[1] && cmd[2])
 	{
@@ -99,17 +100,35 @@ void	mini_exit(t_mini *mini, char **cmd)
 		mini->ret = 0;
 }
 
+int	ft_compare(const char *src1, char *word)
+{
+	int i;
+	char *src;
+	src = ft_strdup(src1);
+	i = 0;
+	while (word[i] && src[i])
+	{
+		if (word[i] != ft_tolower(src[i]))
+		{
+			return (1);
+		}
+		i++;
+	}
+	free(src);
+	return (0);
+}
+
 //comprueba si es algun ejecutable 
 
 int		is_builtin(char *command)
 {
-	if (ft_strcmp(command, "echo") == 0)
+	if (ft_compare(command, "echo") == 0)
 		return (1);
 	if (ft_strcmp(command, "cd") == 0)
 		return (1);
 	if (ft_strcmp(command, "pwd") == 0)
 		return (1);
-	if (ft_strcmp(command, "env") == 0)
+	if (ft_compare(command, "env") == 0)
 		return (1);
 	if (ft_strcmp(command, "export") == 0)
 		return (1);
@@ -125,11 +144,11 @@ int		exec_builtin(char **args, t_mini *mini)
 	int		result;
 
 	result = 0;
-	if (ft_strcmp(args[0], "echo") == 0)
+	if (ft_compare(args[0], "echo") == 0)
 		result = ft_echo(args);
 	if (ft_strcmp(args[0], "pwd") == 0)
 		result = ft_pwd();
-	if (ft_strcmp(args[0], "env") == 0)
+	if (ft_compare(args[0], "env") == 0)
 		result = ft_env(mini->env);
 	if (ft_strcmp(args[0], "export") == 0)
 		result = ft_export(args, mini->env);

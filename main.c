@@ -6,11 +6,26 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 10:51:19 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/03/05 12:11:31 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/03/06 23:23:12 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Minishell.h"
+
+void	free_token(t_token *start)
+{
+	while (start && start->next)
+	{
+		ft_memdel(start->str);
+		start = start->next;
+		ft_memdel(start->prev);
+	}
+	if (start)
+	{
+		ft_memdel(start->str);
+		ft_memdel(start);
+	}
+}
 
 void	handle_signal(int sign)
 {
@@ -120,7 +135,6 @@ int	main(int arc, char **argc, char **envp)
 		{
 			execution(&mini);
 		}
+		free_token(mini.token);
 	}
-
-
 }
