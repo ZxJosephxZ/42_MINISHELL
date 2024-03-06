@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 11:05:43 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/03/06 20:55:34 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/03/06 21:45:41 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	mini_exit(t_mini *mini, char **cmd)
 	{
 		mini->ret = 1;
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR);
-		mini->exit = 0;
+		mini->exit = 2;
 	}
 	else if (cmd[1] && cmd[2])
 	{
