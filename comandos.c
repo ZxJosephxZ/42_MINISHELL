@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 11:33:44 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/03/05 15:57:55 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/03/06 20:19:56 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,8 @@ int		ft_env(t_env *env)
 {
 	while (env && env->next != NULL)
 	{
-		ft_putendl(env->value);
+		if (ft_strchr(env->value, '='))
+			ft_putendl(env->value);
 		env = env->next;
 	}
 	if (env)
@@ -111,12 +112,34 @@ void	ft_putstr(char *s)
 	}
 }
 
+void	show_export_env(char *str)
+{
+	int i;
+	int lock;
+	
+	i = 0;
+	lock = 0;
+	while (str[i])
+	{
+		write(1,&str[i],1);
+		if (str[i] == '=' && lock == 0)
+		{
+			write(1,"\"",1);
+			lock++;
+		}
+		i++;
+	}
+	if (lock != 0)
+		write(1,"\"",1);
+	write(1,"\n",1);
+}
+
 void	ft_print_env_flag(t_env *env)
 {
 	while (env->next)
 	{
 		ft_putstr("declare -x ");
-		ft_putendl(env->value);
+		show_export_env(env->value);
 		env = env->next;
 	}
 }
@@ -136,10 +159,10 @@ int	valid_argument_env(const char *env)
 		}
 		i++;
 	}
-	if (env[i] != '=')
+	/**if (env[i] != '=')
 	{
 		return (2);
-	}
+	}**/
 	return (1);
 }
 
