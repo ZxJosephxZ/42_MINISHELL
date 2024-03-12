@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 12:41:21 by joseph            #+#    #+#             */
-/*   Updated: 2024/03/05 15:58:32 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/03/12 15:13:22 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@
 # define NOSKIP 0
 # define EXPANSION 36
 # define UNKNOWN_COMMAND 127
+# define DIRECTORY 126
 # define ERROR 1
 # define SUCCESS 0
 
@@ -64,8 +65,7 @@ typedef struct s_token
 
 typedef struct s_mini
 {
-    int signin;
-    int signout;
+
     int fdout;
     int fdin;
     int pipein;
@@ -127,11 +127,14 @@ void		insert_var(t_expansions *ex, char *arg, t_env *env, int ret);
 char	*get_var_value(const char *arg, int pos, t_env *env, int ret);
 int		is_env_char(int c);
 char	*get_env_value(char *arg, t_env *env);
+void ft_close(int fd);
+void	free_token(t_token *start);
 
 int				ft_echo(char **args);
 int		ft_pwd(void);
 int		ft_env(t_env *env);
 int		ft_export(char **args, t_env *env);
 int	ft_unset(char **args, t_mini *mini);
+int	cmd_bin(char **cmd, t_env *env, t_mini *mini);
 
 #endif

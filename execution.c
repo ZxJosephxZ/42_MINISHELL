@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 13:20:41 by joseph            #+#    #+#             */
-/*   Updated: 2024/03/05 12:23:42 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/03/12 11:05:07 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,8 @@ void    ejecucion(t_mini *mini, t_token *token)
 		mini_exit(mini, cmd);
 	else if (cmd && is_builtin(cmd[0]))
 		mini->ret = exec_builtin(cmd, mini);
+    else if (cmd)
+        mini->ret = cmd_bin(cmd, mini->env, mini);
 	free_tab(cmd);
 	ft_close(mini->pipein);
 	ft_close(mini->pipeout);

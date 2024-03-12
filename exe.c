@@ -6,14 +6,29 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 11:05:43 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/03/06 23:33:00 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/03/12 15:20:55 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Minishell.h"
 
 //si es un numero en string
+size_t			size_env(t_env *lst)
+{
+	size_t	lst_len;
 
+	lst_len = 0;
+	while (lst && lst->next != NULL)
+	{
+		if (lst->value != NULL)
+		{
+			lst_len += ft_strlen(lst->value);
+			lst_len++;
+		}
+		lst = lst->next;
+	}
+	return (lst_len);
+}
 int	ft_strisnum(const char *str)
 {
 	int	i;
@@ -30,6 +45,152 @@ int	ft_strisnum(const char *str)
 		i++;
 	}
 	return (1);
+}
+
+char		*path_join(const char *s1, const char *s2)
+{
+	char	*tmp;
+	char	*path;
+
+	tmp = ft_strjoin(s1, "/");
+	path = ft_strjoin(tmp, s2);
+	ft_memdel(tmp);
+	return (path);
+}
+
+char *check_route(char *bin, char *command)
+{
+	DIR	*folder;
+	struct dirent	*content;
+	char	*path;
+
+	path = NULL;
+	folder = opendir(bin);
+	if (!folder)
+		return (path);
+	while ((content = readdir(folder)))
+	{
+		if (ft_strcmp(content->d_name, command) == 0)
+			path = path_join(bin, content->d_name);
+	}
+	closedir(folder);
+	return (path);
+}
+
+char			*env_to_str(t_env *lst)
+{
+	char	*env;
+	int		i;
+	int		j;
+
+	if (!(env = malloc(sizeof(char) * size_env(lst) + 1)))
+		return (NULL);
+	i = 0;
+	while (lst && lst->next != NULL)
+	{
+		if (lst->value != NULL)
+		{
+			j = 0;
+			while (lst->value[j])
+			{
+				env[i] = lst->value[j];
+				i++;
+				j++;
+			}
+		}
+		if (lst->next->next != NULL)
+			env[i++] = '\n';
+		lst = lst->next;
+	}
+	env[i] = '\0';
+	return (env);
+}
+
+int			error_message(char *path)
+{
+	DIR	*folder;
+	int	fd;
+	int	ret;
+
+	fd = open(path, O_WRONLY);
+	folder = opendir(path);
+	ft_putstr_fd("minishell: ", STDERR);
+	ft_putstr_fd(path, STDERR);
+	if (ft_strchr(path, '/') == NULL)
+		ft_putendl_fd(": command not found", STDERR);
+	else if (fd == -1 && folder == NULL)
+		ft_putendl_fd(": No such file or directory", STDERR);
+	else if (fd == -1 && folder != NULL)
+		ft_putendl_fd(": is a directory", STDERR);
+	else if (fd != -1 && folder == NULL)
+		ft_putendl_fd(": Permission denied", STDERR);
+	if (ft_strchr(path, '/') == NULL || (fd == -1 && folder == NULL))
+		ret = UNKNOWN_COMMAND;
+	else
+		ret = DIRECTORY;
+	if (folder)
+		closedir(folder);
+	ft_close(fd);
+	return (ret);
+}
+
+int			cmd_execution(char *path, char **args, t_env *env, t_mini *mini)
+{
+	char	**env_array;
+	char	*ptr;
+	int		ret;
+	pid_t pid;
+
+	ret = SUCCESS;
+	pid = fork();
+	if (pid == 0)
+	{
+		ptr = env_to_str(env);
+		env_array = ft_split(ptr, '\n');
+		ft_memdel(ptr);
+		if (ft_strchr(path, '/') != NULL)
+			execve(path, args, env_array);
+		ret = error_message(path);
+		free_tab(env_array);
+		free_token(mini->token);
+		exit(ret);
+	}
+	else
+		waitpid(pid, &ret, 0);
+	//Control de señales
+	return (ret);
+}
+
+int	cmd_bin(char **cmd, t_env *env, t_mini *mini)
+{
+	int i;
+	char *path;
+	char **route;
+	int ret;
+	
+	i = 0;
+	ret = UNKNOWN_COMMAND;
+	while (env && env->value && ft_strncmp(env->value, "PATH=", 5) != 0)
+	{
+		env = env->next;
+	}
+	if (env == NULL || env->next == NULL)
+	//hacer el control de errores en caso de que nos quiten las variables de entorno(gestion de errores).
+		return (0);
+	route = ft_split(env->value, ':');
+	if (!cmd[0] && !route[0])
+		return (ERROR);
+	i = 1;
+	path = check_route(route[0] + 5, cmd[0]);
+	while (cmd[0] && route[i] && path == NULL)
+		path = check_route(route[i++], cmd[0]);
+	if (path != NULL)
+		ret = cmd_execution(path, cmd, env, mini);
+	else
+		ret = cmd_execution(cmd[0], cmd, env, mini);
+	free_tab(route);
+	ft_memdel(path);
+	return (ret);
 }
 
 //En caso de tener una variable que guarde datos o tener un valor especial como ? o $, se abre y guarda elll valor real.

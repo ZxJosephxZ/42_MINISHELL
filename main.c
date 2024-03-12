@@ -6,12 +6,33 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 10:51:19 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/03/06 23:23:12 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/03/12 15:39:44 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Minishell.h"
+void	reset_std(t_mini *mini)
+{
+	dup2(mini->in, STDIN);
+	dup2(mini->out, STDOUT);
+}
 
+void	close_fds(t_mini *mini)
+{
+	ft_close(mini->fdin);
+	ft_close(mini->fdout);
+	ft_close(mini->pipein);
+	ft_close(mini->pipeout);
+}
+
+void	reset_fds(t_mini *mini)
+{
+	mini->fdin = -1;
+	mini->fdout = -1;
+	mini->pipein = -1;
+	mini->pipeout = -1;
+	mini->pid = -1;
+}
 void	free_token(t_token *start)
 {
 	while (start && start->next)
@@ -31,7 +52,7 @@ void	handle_signal(int sign)
 {
 	if(sign == SIGINT)
 	{
-		printf("\nMinishell->");
+		printf("\n");
 	}
 }
 
@@ -85,6 +106,9 @@ void execution(t_mini *mini)
 		mini->last = 1;
 		mini->parent = 1;
 		type_exe(mini,token);
+		reset_std(mini);
+		close_fds(mini);
+		reset_fds(mini);
 		waitpid(-1,&status,0);
 		status = WEXITSTATUS(status);
 		if (mini->last == 0)
@@ -101,6 +125,9 @@ void execution(t_mini *mini)
 	//Procesos
 }
 
+
+
+
 int	main(int arc, char **argc, char **envp)
 {
 
@@ -115,10 +142,12 @@ int	main(int arc, char **argc, char **envp)
 	mini.ret = 0;
 	mini.not_exec = 0;
 	mini.exit = 0;
+
+
 	
 	if(arc > 2 && argc == 0 && envp == 0)
 		return(0);
-	signal_detecter();
+	//signal_detecter();
 	//Obtencion de la variables de entorno
 	get_env(&mini, envp);
 	//La incrementacion de la env shlvl para cada proceso en ejecucion
@@ -129,6 +158,7 @@ int	main(int arc, char **argc, char **envp)
 	parse_token(&mini);
 	while(mini.exit == 0)
 	{
+		signal_detecter();
 		line = readline("Minishell:");
 		mini.token = get_tokens(line);
 		if (mini.token != NULL && check_struct(&mini, mini.token))
