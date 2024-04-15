@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 11:33:44 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/03/06 20:19:56 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/04/15 13:34:13 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,7 +234,7 @@ int		ft_export(char **args, t_env *env)
 {
 	int	new_env;
 	int	error_ret;
-	
+
 	new_env = 0;
 	if (!args[1])
 	{
@@ -249,13 +249,9 @@ int		ft_export(char **args, t_env *env)
 		if (error_ret <= 0)
 			return (ft_print_type_error(error_ret,args[1]));
 		if (error_ret == 2)
-		{
 			new_env = 1;
-		}
 		else
-		{
 			new_env = in_env(env, args[1]);
-		}
 		if (new_env == 0)
 		{
 			if (error_ret == 1)

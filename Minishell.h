@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 12:41:21 by joseph            #+#    #+#             */
-/*   Updated: 2024/03/12 15:13:22 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/04/15 11:58:50 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ typedef struct	s_expansions
 	int				j;
 }	t_expansions;
 
+t_env     *getminienv();
 int     main(int arc, char **argc, char **envp);
 t_token *prev_token(t_token *token, int skip);
 t_token *next_node_token(t_token *token, int skip);

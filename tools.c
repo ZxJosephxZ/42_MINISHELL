@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 11:47:50 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/02/27 13:24:37 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/04/15 10:59:43 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int		get_var_len(const char *arg, int pos, t_env *env, int ret)
 
 //Contabilizar la longitud del argumento
 
-int		arg_alloc_len(const char *arg, t_env *env, int ret)
+int	arg_alloc_len(const char *arg, t_env *env, int ret)
 {
 	int		i;
 	int		size;
@@ -121,7 +121,7 @@ int		arg_alloc_len(const char *arg, t_env *env, int ret)
 
 //Copia la variable y devuelve el numero de iteraciones
 
-static int		varlcpy(char *new_arg, const char *env_value, int pos)
+static int	varlcpy(char *new_arg, const char *env_value, int pos)
 {
 	int		i;
 
@@ -131,15 +131,15 @@ static int		varlcpy(char *new_arg, const char *env_value, int pos)
 	return (i);
 }
 
-void		insert_var(t_expansions *ex, char *arg, t_env *env, int ret)
+void	insert_var(t_expansions *ex, char *arg, t_env *env, int ret)
 {
 	char	*env_value;
 
 	env_value = get_var_value(arg, ex->j, env, ret);
     if (env_value)
-    {
-        ex->i += varlcpy(ex->new_arg, env_value, ex->i);
-    }
+	{
+		ex->i += varlcpy(ex->new_arg, env_value, ex->i);
+	}
 	ft_memdel(env_value);
 	if (arg[ex->j] == '?')
 	{

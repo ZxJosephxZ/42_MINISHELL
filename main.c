@@ -6,11 +6,27 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 10:51:19 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/03/12 15:39:44 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/04/15 13:19:56 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Minishell.h"
+
+void	free_env(t_env *env)
+{
+	t_env	*tmp;
+
+	while (env && env->next)
+	{
+		tmp = env;
+		env = env->next;
+		ft_memdel(tmp->value);
+		ft_memdel(tmp);
+	}
+	ft_memdel(env->value);
+	ft_memdel(env);
+}
+
 void	reset_std(t_mini *mini)
 {
 	dup2(mini->in, STDIN);
@@ -64,30 +80,6 @@ void    signal_detecter(void)
     signal(SIGQUIT, SIG_IGN);
 }
 
-
-//Comprueba el correcto ordenamiento de los tokens para su posterior ejecucion
-//El primer if comprueba tokens vacios y redirecciones
-//Ell segundo if hace la comprobacion de pipe y finales como el ;
-int check_struct(t_mini *mini, t_token *token)
-{
-	while (token)
-	{
-		if (is_types(token, "TAI") && (!token->next || is_types(token->next, "TAIPE")))
-		{
-			ft_putstr_fd("BRO ESCRIBE BIEN1\n",STDERR);
-			mini->error = 2;
-			return (0);
-		}
-		if (is_types(token, "PE") && (!token->prev || !token->next || is_types(token->prev, "TAIPE")))
-		{
-			ft_putstr_fd("BRO ESCRIBE BIEN2\n",STDERR);
-			mini->error = 2;
-			return (0);
-		}
-		token = token->next;
-	}
-	return (1);
-}
 //Parte que corresponde con la ejecucion de los tokens 
 void execution(t_mini *mini)
 {
@@ -125,14 +117,10 @@ void execution(t_mini *mini)
 	//Procesos
 }
 
-
-
-
 int	main(int arc, char **argc, char **envp)
 {
-
-	t_mini mini;
-	char *line;
+	t_mini	mini;
+	char	*line;
 
 	(void)argc;
 	(void)arc;
@@ -142,29 +130,34 @@ int	main(int arc, char **argc, char **envp)
 	mini.ret = 0;
 	mini.not_exec = 0;
 	mini.exit = 0;
-
-
 	
-	if(arc > 2 && argc == 0 && envp == 0)
+	if(arc > 2 && argc == 0)
 		return(0);
 	//signal_detecter();
 	//Obtencion de la variables de entorno
-	get_env(&mini, envp);
-	//La incrementacion de la env shlvl para cada proceso en ejecucion
+	if (envp[0] == NULL)
+	{
+		mini.env = getminienv();
+	}
+	else
+	{
+		get_env(&mini, envp);
+	}
 	increment_shlv(mini.env);
 	//Particion de los tokens a ejecutar
 	
 	//Comprobacion de un correcto asignado de tipos o secuencia
 	parse_token(&mini);
-	while(mini.exit == 0)
+	while (mini.exit == 0)
 	{
 		signal_detecter();
 		line = readline("Minishell:");
 		mini.token = get_tokens(line);
-		if (mini.token != NULL && check_struct(&mini, mini.token))
+		if (mini.token != NULL)
 		{
 			execution(&mini);
 		}
 		free_token(mini.token);
 	}
+	free_env(mini.env);
 }

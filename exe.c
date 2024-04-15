@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 11:05:43 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/03/12 15:20:55 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/04/15 10:47:37 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ int	cmd_bin(char **cmd, t_env *env, t_mini *mini)
 	char *path;
 	char **route;
 	int ret;
-	
+
 	i = 0;
 	ret = UNKNOWN_COMMAND;
 	while (env && env->value && ft_strncmp(env->value, "PATH=", 5) != 0)
@@ -211,7 +211,7 @@ char			*expansions(char *arg, t_env *env, int ret)
 		{
 			ex.j++;
 			if ((arg[ex.j] == '\0' || ft_isalnum(arg[ex.j]) == 0)
-			&& arg[ex.j] != '?')
+				&& arg[ex.j] != '?')
 				ex.new_arg[ex.i++] = '$';
 			else
 				insert_var(&ex, arg, env, ret);
@@ -241,7 +241,6 @@ void	mini_exit(t_mini *mini, char **cmd)
 {
 	mini->exit = 1;
 	ft_putstr_fd("exit ", STDERR);
-
 	if ((cmd[1] && cmd[2]) && (ft_strisnum(cmd[1]) || ft_strisnum(cmd[2])))
 	{
 		mini->ret = 1;
@@ -263,8 +262,9 @@ void	mini_exit(t_mini *mini, char **cmd)
 
 int	ft_compare(const char *src1, char *word)
 {
-	int i;
-	char *src;
+	int		i;
+	char	*src;
+
 	src = ft_strdup(src1);
 	i = 0;
 	while (word[i] && src[i])
