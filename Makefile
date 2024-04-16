@@ -6,13 +6,13 @@
 #    By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/04 15:35:45 by jpajuelo          #+#    #+#              #
-#    Updated: 2024/02/20 11:48:13 by jpajuelo         ###   ########.fr        #
+#    Updated: 2024/04/16 12:49:29 by jpajuelo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = Minishell
 
-SRC = main.c utils.c env.c token.c shlv.c parse_token.c execution.c exe.c comandos.c tools.c
+SRC = main.c utils.c env.c token.c shlv.c parse_token.c execution.c exe.c comandos.c tools.c cd.c
 
 CC = gcc
 

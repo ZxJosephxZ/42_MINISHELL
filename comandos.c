@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 11:33:44 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/04/15 13:34:13 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/04/16 11:41:01 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,6 +230,106 @@ int	add_env(const char *arg, t_env *env)
 	return (SUCCESS);
 }
 
+void replace_char(char *str, char find, char replace) {
+    while (*str != '\0') {
+        if (*str == find) {
+            *str = replace;
+        }
+        str++;
+    }
+}
+
+int	ft_directoryexport(char *path, t_env *env)
+{
+	DIR *dir;
+    struct dirent *entry;
+    char **files;
+    int count = 0;
+	int i = 0;
+	(void)path;
+    // Abrir el directorio actual
+	if (ft_strcmp(path,"*"))
+	{
+		replace_char(path,'*','.');
+		dir = opendir(path);
+	}
+    else
+	{
+		replace_char(path,'*','.');
+		dir = opendir(path);
+	}
+    if (dir == NULL) {
+        perror("Error al abrir el directorio");
+        exit(EXIT_FAILURE);
+    }
+
+    // Contar la cantidad de archivos y carpetas en el directorio
+    while ((entry = readdir(dir)) != NULL) {
+        count++;
+    }
+
+    // Reservar memoria para el array de nombres de archivos
+    files = (char **)malloc(count * sizeof(char *));
+    if (files == NULL) {
+        perror("Error al reservar memoria");
+        closedir(dir);
+        exit(EXIT_FAILURE);
+    }
+
+    // Reiniciar el puntero del directorio
+    dir = opendir(path);
+
+    // Almacenar los nombres de archivos en el array
+    count = 0;
+    while ((entry = readdir(dir)) != NULL) {
+        files[count] = entry->d_name;
+        count++;
+    }
+	
+	while (i < count)
+	{
+		printf("%s",files[i]);
+		ft_export2(files[i], env);
+		i++;
+	}
+    // Liberar memoria y cerrar el directorio
+    closedir(dir);
+    free(files);
+
+    return 0;
+}
+
+int		ft_export2(char *args, t_env *env)
+{
+	int	new_env;
+	int	error_ret;
+
+	new_env = 0;
+	if (!args)
+	{
+		ft_print_env_flag(env);
+		return (SUCCESS);
+	}
+	else
+	{
+		error_ret = valid_argument_env(args);
+		if (ft_strcmp(args,"=")== 0)
+			error_ret = -3;
+		if (error_ret <= 0)
+			return (ft_print_type_error(error_ret,args));
+		if (error_ret == 2)
+			new_env = 1;
+		else
+			new_env = in_env(env, args);
+		if (new_env == 0)
+		{
+			if (error_ret == 1)
+				add_env(args, env);
+		}
+	}
+	return (SUCCESS);
+}
+
 int		ft_export(char **args, t_env *env)
 {
 	int	new_env;
@@ -243,6 +343,9 @@ int		ft_export(char **args, t_env *env)
 	}
 	else
 	{
+		if (ft_strcmp(args[1],"*") == 0 || ((args[1][0] != '/' && args[1][ft_strlen(args[1]) - 1] != '/')
+			&& ft_strchr(args[1], '/')))
+			return (ft_directoryexport(args[1], env));
 		error_ret = valid_argument_env(args[1]);
 		if (args[1][0] == '=')
 			error_ret = -3;

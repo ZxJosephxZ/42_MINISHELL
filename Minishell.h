@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 12:41:21 by joseph            #+#    #+#             */
-/*   Updated: 2024/04/15 11:58:50 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/04/16 12:53:20 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <sys/types.h>
+# include <string.h>
 # include <signal.h>
 # include <limits.h>
+# include <errno.h>
 # include <dirent.h>
 
 # define EMPTY 0
@@ -93,6 +95,8 @@ typedef struct	s_expansions
 }	t_expansions;
 
 t_env     *getminienv();
+int				ft_cd(char **args, t_env *env);
+int		ft_export2(char *args, t_env *env);
 int     main(int arc, char **argc, char **envp);
 t_token *prev_token(t_token *token, int skip);
 t_token *next_node_token(t_token *token, int skip);
@@ -137,5 +141,7 @@ int		ft_env(t_env *env);
 int		ft_export(char **args, t_env *env);
 int	ft_unset(char **args, t_mini *mini);
 int	cmd_bin(char **cmd, t_env *env, t_mini *mini);
+int	in_env(t_env *env, char *arg);
+int	add_env(const char *arg, t_env *env);
 
 #endif

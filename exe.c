@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 11:05:43 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/04/15 10:47:37 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/04/16 12:48:42 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -313,6 +313,8 @@ int		exec_builtin(char **args, t_mini *mini)
 		result = ft_env(mini->env);
 	if (ft_strcmp(args[0], "export") == 0)
 		result = ft_export(args, mini->env);
+	if (ft_strcmp(args[0], "cd") == 0)
+		result = ft_cd(args, mini->env);
 	if (ft_strcmp(args[0], "unset") == 0)
 		result = ft_unset(args, mini);
 	return (result);
