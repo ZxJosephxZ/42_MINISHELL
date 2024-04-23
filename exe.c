@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 11:05:43 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/04/16 12:48:42 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/04/23 12:33:27 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ int	cmd_bin(char **cmd, t_env *env, t_mini *mini)
 	}
 	if (env == NULL || env->next == NULL)
 	//hacer el control de errores en caso de que nos quiten las variables de entorno(gestion de errores).
-		return (0);
+		return (cmd_execution(cmd[0], cmd, env, mini));
 	route = ft_split(env->value, ':');
 	if (!cmd[0] && !route[0])
 		return (ERROR);

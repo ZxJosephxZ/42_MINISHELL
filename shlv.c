@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 11:59:12 by joseph            #+#    #+#             */
-/*   Updated: 2024/04/15 10:55:02 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/04/23 13:41:42 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 void	ft_jump_space(const char *str, int *i)
 {
-	while ((str[*i] == ' ' || str[*i] == '\t' || str[*i] == '\n')
+	while ((str[*i] == ' ' || str[*i] == '\t')
 		|| (str[*i] == '\r' || str[*i] == '\v' || str[*i] == '\f'))
 		(*i)++;
 }

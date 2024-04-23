@@ -6,7 +6,7 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 12:41:21 by joseph            #+#    #+#             */
-/*   Updated: 2024/04/16 12:53:20 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:13:09 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@
 
 # define SKIP 1
 # define NOSKIP 0
-# define EXPANSION 36
+# define EXPANSION -36
 # define UNKNOWN_COMMAND 127
 # define DIRECTORY 126
 # define ERROR 1
@@ -134,6 +134,7 @@ int		is_env_char(int c);
 char	*get_env_value(char *arg, t_env *env);
 void ft_close(int fd);
 void	free_token(t_token *start);
+char	*space_alloc(char *line);
 
 int				ft_echo(char **args);
 int		ft_pwd(void);
@@ -143,5 +144,7 @@ int	ft_unset(char **args, t_mini *mini);
 int	cmd_bin(char **cmd, t_env *env, t_mini *mini);
 int	in_env(t_env *env, char *arg);
 int	add_env(const char *arg, t_env *env);
+int		quotes(char *line, int index);
+int		is_sep(char *line, int i);
 
 #endif

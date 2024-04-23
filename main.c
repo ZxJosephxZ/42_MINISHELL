@@ -6,11 +6,40 @@
 /*   By: jpajuelo <jpajuelo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 10:51:19 by jpajuelo          #+#    #+#             */
-/*   Updated: 2024/04/15 13:19:56 by jpajuelo         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:11:17 by jpajuelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Minishell.h"
+
+char	*space_line(char *line)
+{
+	char	*new;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	new = space_alloc(line);
+	while (new && line[i])
+	{
+		if (quotes(line, i) != 2 && line[i] == '$' && i && line[i - 1] != '\\')
+			new[j++] = (char)(-line[i++]);
+		else if (quotes(line, i) == 0 && is_sep(line, i))
+		{
+			new[j++] = ' ';
+			new[j++] = line[i++];
+			if (quotes(line, i) == 0 && line[i] == '>')
+				new[j++] = line[i++];
+			new[j++] = ' ';
+		}
+		else
+			new[j++] = line[i++];
+	}
+	new[j] = '\0';
+	ft_memdel(line);
+	return (new);
+}
 
 void	free_env(t_env *env)
 {
@@ -109,12 +138,12 @@ void execution(t_mini *mini)
 		}
 		if (mini->parent == 0)
 		{
+			free_token(mini->token);
 			exit(mini->ret);
 		}
 		mini->not_exec = 0;
 		token = next_exe(token, SKIP);
 	}
-	//Procesos
 }
 
 int	main(int arc, char **argc, char **envp)
@@ -147,11 +176,12 @@ int	main(int arc, char **argc, char **envp)
 	//Particion de los tokens a ejecutar
 	
 	//Comprobacion de un correcto asignado de tipos o secuencia
-	parse_token(&mini);
+	
 	while (mini.exit == 0)
 	{
 		signal_detecter();
 		line = readline("Minishell:");
+		line = space_line(line); // trampita o.o
 		mini.token = get_tokens(line);
 		if (mini.token != NULL)
 		{
@@ -160,4 +190,5 @@ int	main(int arc, char **argc, char **envp)
 		free_token(mini.token);
 	}
 	free_env(mini.env);
+	return (mini.ret);
 }
